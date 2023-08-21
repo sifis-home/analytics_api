@@ -1,0 +1,9 @@
+version: '2.2'
+
+services:
+  app:
+    image: analytics_api
+    network_mode: "host"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - C:\Users\wisam\Desktop\Final_Analytics_Integration\my_data:/analytics_api/data

@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "analytics_api"
+version = "0.0"
+description = "Analytics API"
+authors = ["WisamAbbasi <wesam.alabbasi@iit.cnr.it>"]
+repository = "https://github.com/sifis-home/analytics_api"
+license = "MIT"
+classifiers = [
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3 :: Only",
+]
+include = ["README.md", "LICENSE.md", "analytics_api/data/*"]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+flask = "^2.2.2"
+websocket-client = "1.6.1"
+rel = "0.4.9"
+requests = "2.28.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.1"
+pre-commit = "^3.0.4"
+black = "^23.1.0"
+isort = "^5.12.0"
+ruff = "^0.0.63"
+coverage = {extras = ["toml"], version = "^7.1.0"}
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "pip>=22.1.2"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.ruff]
+line-length = 79
+select = [
+    "F401",
+    "F403",
+]
+
+[tool.coverage.run]
+omit = [".*", "*/site-packages/*"]
+
+[tool.coverage.report]
+fail_under = 60
