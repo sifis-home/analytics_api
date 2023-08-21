@@ -1,21 +1,20 @@
+import json
 import sys
 import unittest
 from argparse import Namespace
-from unittest.mock import Mock, mock_open, patch, MagicMock
+from unittest.mock import MagicMock, Mock, mock_open, patch
 
 import requests
-import json
 
-import websocket
 import check
 from analytics_api import (
     get_last_time,
     netspot_alarm_check,
     on_close,
     on_error,
+    on_message,
     on_open,
     set_last_time,
-    on_message,
 )
 
 # ws = websocket.WebSocketApp(
@@ -26,11 +25,12 @@ from analytics_api import (
 #         on_close=on_close,
 #     )
 
+
 class TestOnMessageFunction(unittest.TestCase):
     def setUp(self):
         self.ws = MagicMock()
 
-    @patch('analytics_api.json.loads')
+    @patch("analytics_api.json.loads")
     def test_speech_recognition_message(self, mock_json_loads):
         # Define a sample JSON message for Privacy_Aware_Speech_Recognition
         json_message = {
@@ -42,15 +42,15 @@ class TestOnMessageFunction(unittest.TestCase):
                     "requestor_type": "user",
                     "request_id": "123",
                     "Entity Types": ["person"],
-                    "method": "DeepSpeeach"
-                }
+                    "method": "DeepSpeeach",
+                },
             }
         }
         mock_json_loads.return_value = json_message
 
         on_message(self.ws, json.dumps(json_message))
 
-    @patch('analytics_api.json.loads')
+    @patch("analytics_api.json.loads")
     def test_publish_alarms_request_message(self, mock_json_loads):
         json_message = {
             "Persistent": {
@@ -59,27 +59,26 @@ class TestOnMessageFunction(unittest.TestCase):
                     "Address": "192.168.1.1",
                     "Port": 1234,
                     "Within Time": 10,
-                    "Device name": "Device1"
-                }
+                    "Device name": "Device1",
+                },
             }
         }
         mock_json_loads.return_value = json_message
 
         on_message(self.ws, json.dumps(json_message))
 
-    @patch('analytics_api.json.loads')
+    @patch("analytics_api.json.loads")
     def test_aud_manager_request_message(self, mock_json_loads):
         json_message = {
             "Persistent": {
                 "topic_name": "SIFIS:AUD_Manager_Request",
-                "value": {
-                    "Request": "some_request"
-                }
+                "value": {"Request": "some_request"},
             }
         }
         mock_json_loads.return_value = json_message
 
         on_message(self.ws, json.dumps(json_message))
+
 
 class TestMainFunction(unittest.TestCase):
     @patch(

@@ -7,7 +7,6 @@ RUN mkdir /analytics_api
 WORKDIR /analytics_api
 COPY analytics_api.py /analytics_api
 COPY check.py /analytics_api
-COPY ./data /analytics_api/data
 COPY pyproject.toml /analytics_api
 
 RUN poetry config virtualenvs.create false
