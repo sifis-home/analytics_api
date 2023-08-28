@@ -27,6 +27,7 @@ SUBSCRIBED_TOPICS = [
     "SIFIS:Privacy_Aware_Speaker_Verification",
     "SIFIS:Privacy_Aware_Audio_Anomaly_Detection",
     "SIFIS:Privacy_Aware_Audio_Anomaly_Detection_Results",
+    "SIFIS:Privacy_Aware_Face_Recognition_CAM",
 ]
 
 
@@ -587,6 +588,75 @@ def on_message(ws, message):
 
                     files = [
                         ("file", open(file_path, "rb")),
+                        ("path", database_path),
+                    ]
+
+                    # Make the request
+                    response = requests.post(url, files=files)
+
+                    # Check the response
+                    if response.status_code == 200:
+                        print("Request succeeded.")
+                        response_dict = json.loads(response.content)
+                        response_dict2 = response_dict["RequestPostTopicUUID"][
+                            "value"
+                        ]
+
+                        ws.send(json.dumps(response_dict))
+                    else:
+                        print("Request failed.")
+                        print(response.content)
+
+                elif (
+                    json_message["topic_name"]
+                    == "SIFIS:Privacy_Aware_Face_Recognition_CAM"
+                ):
+                    print("Received instance of " + json_message["topic_name"])
+                    print("cam_link: " + json_message["value"]["cam_link"])
+                    print(
+                        "database_path: "
+                        + json_message["value"]["database_path"]
+                    )
+                    print(
+                        "requestor_id: "
+                        + json_message["value"]["requestor_id"]
+                    )
+                    print(
+                        "requestor_type: "
+                        + json_message["value"]["requestor_type"]
+                    )
+                    print("request_id: " + json_message["value"]["request_id"])
+                    print(
+                        "privacy_parameter: "
+                        + str(json_message["value"]["privacy_parameter"])
+                    )
+
+                    cam_link = json_message["value"]["cam_link"]
+                    database_path = json_message["value"]["database_path"]
+                    requestor_id = json_message["value"]["requestor_id"]
+                    requestor_type = json_message["value"]["requestor_type"]
+                    request_id = json_message["value"]["request_id"]
+                    privacy_parameter = json_message["value"][
+                        "privacy_parameter"
+                    ]
+
+                    url = (
+                        "http://localhost:8090/cam_face_recognition/"
+                        + database_path
+                        + "/"
+                        + cam_link
+                        + "/"
+                        + str(privacy_parameter)
+                        + "/"
+                        + requestor_id
+                        + "/"
+                        + requestor_type
+                        + "/"
+                        + request_id
+                    )
+                    database_path = database_path
+
+                    files = [
                         ("path", database_path),
                     ]
 
