@@ -642,8 +642,6 @@ def on_message(ws, message):
 
                     url = (
                         "http://localhost:8090/cam_face_recognition/"
-                        + database_path
-                        + "/"
                         + cam_link
                         + "/"
                         + str(privacy_parameter)
