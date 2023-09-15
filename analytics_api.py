@@ -402,7 +402,7 @@ def on_message(ws, message):
                         response_dict2 = response_dict["RequestPostTopicUUID"][
                             "value"
                         ]
-                        ws.send(json.dumps(response_dict))
+                        # ws.send(json.dumps(response_dict))
                     else:
                         print("Request failed.")
                         print(response.content)
