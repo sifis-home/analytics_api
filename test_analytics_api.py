@@ -30,6 +30,37 @@ class TestOnMessageFunction(unittest.TestCase):
     def setUp(self):
         self.ws = MagicMock()
 
+    @patch("analytics_api.json.loads")  # Mock the requests.post function
+    def test_device_anomaly(self, mock_get):
+        # Prepare a mock response from requests.get
+        mock_response = mock_get.return_value
+        mock_response.status_code = 200
+        mock_response.content = json.dumps(
+            {
+                "RequestPostTopicUUID": {
+                    "value": {
+                        "description": "Device Anomaly Detection Results",
+                        "requestor_id": "123",
+                        "requestor_type": "user",
+                        "request_id": "456",
+                        "Temperatures": [30, 32, 28],
+                    }
+                }
+            }
+        )
+
+        # Call your_function with a mock JSON message
+        json_message = {
+            "topic_name": "SIFIS:Privacy_Aware_Device_Anomaly_Detection",
+            "value": {
+                "requestor_id": "123",
+                "requestor_type": "user",
+                "request_id": "456",
+                "Temperatures": [30, 32, 28],
+            },
+        }
+        on_message(self.ws, json.dumps(json_message))
+
     @patch("analytics_api.json.loads")
     def test_speech_recognition_message(self, mock_json_loads):
         # Define a sample JSON message for Privacy_Aware_Speech_Recognition
@@ -59,6 +90,23 @@ class TestOnMessageFunction(unittest.TestCase):
                     "Address": "192.168.1.1",
                     "Port": 1234,
                     "Within Time": 10,
+                    "Device name": "Device1",
+                },
+            }
+        }
+        mock_json_loads.return_value = json_message
+
+        on_message(self.ws, json.dumps(json_message))
+
+    @patch("analytics_api.json.loads")
+    def test_publish_alarms_request_message_None(self, mock_json_loads):
+        json_message = {
+            "Persistent": {
+                "topic_name": "SIFIS:Publish_Alarms_Request",
+                "value": {
+                    "Address": "192.168.1.1",
+                    "Port": 1234,
+                    "Within Time": None,
                     "Device name": "Device1",
                 },
             }
