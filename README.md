@@ -14,7 +14,6 @@
 [codecov badge]: https://codecov.io/gh/sifis-home/analytics_api/branch/master/graph/badge.svg
 [license badge]: https://img.shields.io/badge/license-MIT-blue.svg
 
-Analytics API is ....
 
 ## Deploying
 
